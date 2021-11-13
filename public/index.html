@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Gallery</title>
+
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<form id="upload" action="http://localhost:3000/" enctype="multipart/form-data" method="post" onsubmit="load_photo()"> 
+   		<p><input type="file" name="postImg" id='file' class="inputfile">
+   			<label for="file"><strong>Добавить фото</strong></label>
+    	<input type="submit" value="Отправить"></p>
+    </form>
+	<div id="gallery"></div>
+
+	<script src="lib/jquery-3.6.0.min.js"></script>
+	<script src="js/gallery.js"></script>
+	<script>
+		function load_photo(){
+			var fd = new FormData($("form").get(0));    
+		    $.ajax({
+		        url: "http://localhost:3000/" ,
+		        data: fd,
+		        dataType: 'json',
+		        type: 'POST',
+		        processData: false,
+		        contentType: false,
+		        success: function (dataR) {
+		            console.log(dataR)
+		            if (dataR.hasOwnProperty('message')){
+		                document.getElementById('message').innerHTML = dataR.message;
+		            }else{
+		                window.location.replace('/restaurant?restaurantid=' + dataR.restaurant_ID);
+		            }
+		        },
+		        error: function (xhr, status, error) {
+		            console.log('Error: ' + error.message);
+		        }
+		    });
+		    event.preventDefault();
+		}
+	</script>
+</body>
+</html>
